@@ -1,4 +1,5 @@
 import { KotaStayLogo } from '@/components/KotaStayLogo';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -16,6 +17,7 @@ export default function OwnerLayout({
              <KotaStayLogo iconClassName="h-6 w-6" textClassName="text-2xl" />
           </Link>
           <div className="flex items-center gap-4">
+             <ThemeToggle />
              <Avatar>
                 <AvatarImage src="https://placehold.co/40x40.png" alt="Owner" data-ai-hint="user avatar" />
                 <AvatarFallback>O</AvatarFallback>

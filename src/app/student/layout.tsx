@@ -1,5 +1,6 @@
 import { BottomNav } from '@/components/BottomNav';
 import { KotaStayLogo } from '@/components/KotaStayLogo';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 
@@ -15,10 +16,13 @@ export default function StudentLayout({
           <Link href="/">
              <KotaStayLogo iconClassName="h-6 w-6" textClassName="text-2xl" />
           </Link>
-          <Avatar>
-            <AvatarImage src="https://placehold.co/40x40.png" alt="Student" data-ai-hint="user avatar" />
-            <AvatarFallback>S</AvatarFallback>
-          </Avatar>
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <Avatar>
+              <AvatarImage src="https://placehold.co/40x40.png" alt="Student" data-ai-hint="user avatar" />
+              <AvatarFallback>S</AvatarFallback>
+            </Avatar>
+          </div>
         </div>
       </header>
       <main className="flex-1 pb-20">{children}</main>
