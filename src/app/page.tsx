@@ -1,13 +1,41 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Phone, Building, User, LogIn } from 'lucide-react';
+import { Phone, Building, User, LogIn, TriangleAlert } from 'lucide-react';
 import { KotaStayLogo } from '@/components/KotaStayLogo';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
+  const validateEmail = (email: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const handleSignIn = (role: 'student' | 'owner') => {
+    if (!email || !password) {
+      setError('Please enter both email and password.');
+      return;
+    }
+    if (!validateEmail(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+    setError(null);
+    router.push(`/${role}`);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
         <div className="w-full max-w-md">
@@ -18,26 +46,39 @@ export default function LoginPage() {
                     <CardDescription>Sign in to continue to KotaStay</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
+                    {error && (
+                      <Alert variant="destructive">
+                        <TriangleAlert className="h-4 w-4" />
+                        <AlertDescription>{error}</AlertDescription>
+                      </Alert>
+                    )}
                     <div className="space-y-2">
                         <Label htmlFor="email">Email Address</Label>
-                        <Input id="email" type="email" placeholder="student@example.com" />
+                        <Input 
+                          id="email" 
+                          type="email" 
+                          placeholder="student@example.com" 
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="password">Password</Label>
-                        <Input id="password" type="password" />
+                        <Input 
+                          id="password" 
+                          type="password" 
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                        />
                     </div>
 
                     <div className="flex flex-col gap-4 mt-2">
-                        <Link href="/student" passHref>
-                          <Button className="w-full" size="lg">
-                            <LogIn className="mr-2" /> Sign in as Student
-                          </Button>
-                        </Link>
-                         <Link href="/owner" passHref>
-                          <Button className="w-full" size="lg" variant="secondary">
-                            <LogIn className="mr-2" /> Sign in as Owner
-                          </Button>
-                        </Link>
+                      <Button className="w-full" size="lg" onClick={() => handleSignIn('student')}>
+                        <LogIn className="mr-2" /> Sign in as Student
+                      </Button>
+                      <Button className="w-full" size="lg" variant="secondary" onClick={() => handleSignIn('owner')}>
+                        <LogIn className="mr-2" /> Sign in as Owner
+                      </Button>
                     </div>
 
                     <div className="mt-4 flex items-center">
