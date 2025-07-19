@@ -11,6 +11,7 @@ import { KotaStayLogo } from '@/components/KotaStayLogo';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { signInWithGoogle } from "@/lib/auth"; // Import the signInWithGoogle function
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -19,7 +20,7 @@ export default function LoginPage() {
   const router = useRouter();
 
   const validateEmail = (email: string) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const re = /^[^s@]+@[^s@]+.[^s@]+$/;
     return re.test(String(email).toLowerCase());
   };
 
@@ -35,6 +36,24 @@ export default function LoginPage() {
     setError(null);
     router.push(`/${role}`);
   };
+
+  // Function to handle Google Sign-In
+  const handleGoogleSignIn = async () => {
+    try {
+      const user = await signInWithGoogle();
+      // Handle successful sign-in, e.g., redirect to a dashboard page
+      if (user) {
+        // Redirect the user to a desired page after successful Google sign-in
+        // router.push("/dashboard"); // Uncomment and replace /dashboard with your path
+      }
+    } catch (error) {
+      // Handle errors (e.g., display an error message to the user)
+      console.error("Error signing in with Google:", error);
+      // Optionally set an error state to display a message on the UI
+      // setError("Failed to sign in with Google. Please try again.");
+    }
+  };
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
@@ -54,19 +73,19 @@ export default function LoginPage() {
                     )}
                     <div className="space-y-2">
                         <Label htmlFor="email">Email Address</Label>
-                        <Input 
-                          id="email" 
-                          type="email" 
-                          placeholder="student@example.com" 
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="student@example.com"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="password">Password</Label>
-                        <Input 
-                          id="password" 
-                          type="password" 
+                        <Input
+                          id="password"
+                          type="password"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                         />
@@ -92,7 +111,7 @@ export default function LoginPage() {
                     </p>
 
                     <div className="flex justify-center gap-4">
-                        <Button variant="outline" className="w-1/2">
+                        <Button variant="outline" className="w-1/2" onClick={handleGoogleSignIn}> {/* Added onClick handler */}
                             <svg role="img" viewBox="0 0 24 24" className="mr-2 h-4 w-4"><path fill="currentColor" d="M12.48 10.92v3.28h7.84c-.24 1.84-.85 3.18-1.73 4.1-1.02 1.02-2.3 1.84-4.32 1.84-3.6 0-6.52-3.02-6.52-6.72s2.92-6.72 6.52-6.72c2.03 0 3.36.79 4.29 1.72l2.4-2.4C16.97 4.01 14.95 3 12.48 3c-5.22 0-9.48 4.26-9.48 9.5s4.26 9.5 9.48 9.5c2.58 0 4.76-.84 6.4-2.42 1.7-1.63 2.58-3.92 2.58-6.18 0-.54-.05-.98-.12-1.4H12.48z"></path></svg>
                             Google
                         </Button>

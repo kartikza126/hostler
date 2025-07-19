@@ -1,17 +1,42 @@
-import type {Metadata} from 'next';
+"use client";
+
 import './globals.css';
 import { Providers } from '@/components/Providers';
-
-export const metadata: Metadata = {
-  title: 'KotaStay',
-  description: 'Find your perfect hostel in Kota',
-};
+import { useEffect } from 'react';
+import { getAuth, getRedirectResult, GoogleAuthProvider } from 'firebase/auth';
+import { app } from '@/lib/firebase';
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  useEffect(() => {
+    const handleRedirectResult = async () => {
+      try {
+        const auth = getAuth(app);
+        const result = await getRedirectResult(auth);
+        if (result) {
+          // This is a redirect from Google Sign-In.
+          const user = result.user;
+          // You can access user information here (e.g., user.displayName, user.email)
+          console.log("Google Sign-In successful!", user);
+          // TODO: Redirect the user to the desired page (e.g., dashboard)
+        }
+      } catch (error: any) {
+        // Handle errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        const email = error.customData?.email;
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        console.error("Error getting redirect result:", errorCode, errorMessage, email, credential);
+        // TODO: Display an error message to the user
+      }
+    };
+
+    handleRedirectResult();
+  }, []);
+
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
       <head>
